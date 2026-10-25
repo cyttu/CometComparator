@@ -3,12 +3,14 @@ from tkinter import filedialog, messagebox
 from pathlib import Path
 from astropy.io import fits
 from PIL import Image
+import cv2
 import matplotlib.pyplot as plt
 import tempfile
 import os
 import algoritmi.ssim as ssim
 import algoritmi.emd as emd
 import algoritmi.mutualinfo as mutualinfo
+import algoritmi.mix as mix
 import numpy as np
 
 class ImageComparatorApp:
@@ -22,7 +24,8 @@ class ImageComparatorApp:
         self.algorithms_list = [
             "Structural Similarity (SSIM)",
             "Earth Mover's Distance (EMD)",
-            "Mutual Information"
+            "Mutual Information",
+            "Mix"
         ]
 
         # --- SEZIONE FILE 1 ---
@@ -183,6 +186,14 @@ class ImageComparatorApp:
                  "Risultato Mutual Information", 
                  f"Mutual Information (MI): {score:.4f} bit\n(Valori più alti indicano una forte dipendenza e somiglianza statistica)"
                 )
+                return
+            elif chosen_algorithm == "Mix":
+                #coordinate polari
+                img1 = np.array(pil_img1)
+                img2 = np.array(pil_img2)
+                mix.mix(img1,img2)
+                
+                
                 return
             else:
                 # Placeholder per gli altri algoritmi futuri
