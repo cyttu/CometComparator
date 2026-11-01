@@ -1,4 +1,5 @@
 import cv2
+from matplotlib import pyplot as plt
 import numpy as np
 
             
@@ -19,11 +20,34 @@ def mix(img1, img2):
                               cv2.WARP_FILL_OUTLIERS + cv2.WARP_POLAR_LINEAR)
         polar_img2 = cv2.warpPolar(img2, dsize2, center2, maxRadius2, 
                               cv2.WARP_FILL_OUTLIERS + cv2.WARP_POLAR_LINEAR)
-        polar_img1 = cv2.flip(cv2.transpose(polar_img1), 0)
-        polar_img2 = cv2.flip(cv2.transpose(polar_img2), 0)
+        polar_img1 = cv2.transpose(polar_img1) # centro dell'immagine originale corrisponde alla prima riga
+        polar_img2 = cv2.transpose(polar_img2)
+
+        # per visualizzazione: centro corrisponde all'ultima riga, che appare in basso
+        polar_img1_flipped = cv2.flip(polar_img1, 0)
+        polar_img2_flipped = cv2.flip(polar_img2, 0)
+
         #visualizzatemporaneo
-        cv2.imshow("pol1", polar_img1)
-        cv2.imshow("pol2", polar_img2)
+        _, ax = plt.subplots(2, 2)
+        ax[0, 0].imshow(polar_img1_flipped, cmap='gray')
+        ax[0, 1].imshow(polar_img2_flipped, cmap='gray')
+        #cv2.imshow("pol1", polar_img1)
+        #cv2.imshow("pol2", polar_img2)
+
+        # raggio approssimato del modello: raggio della circonferenza più grande lungo la quale
+        # ci sia ancora informazione visiva (anziché vuoto)
+        # (si assume che `polar_img2` è il modello)
+        threshold = 64 # idk, arbitrario
+        model_radius = polar_img2.shape[0] - 1
+        while (np.sum(polar_img2[model_radius]) < threshold) and (model_radius > 0):
+                model_radius -= 1
+        print(f"raggio di analisi: {model_radius} px")
+        # analizzare alcune o tutte le circonferenze tra il centro e il raggio del modello
+
+        # esempio: raggio // 2
+        ax[1, 0].plot(polar_img1[model_radius // 2])
+        ax[1, 1].plot(polar_img2[model_radius // 2])
+        plt.show()
                 #find traiettorie
                 #correlazione
         return 
