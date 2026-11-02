@@ -94,7 +94,15 @@ class ImageComparatorApp:
                 # Legge il file FITS
                 with fits.open(path) as hdul:
                     image_data = hdul[0].data
-                
+                    hdr = hdul[0].header
+
+                # Esegue clipping per rimuovere outlier, pixel con valori molto più alti o bassi
+                # rispetto alla maggior parte degli altri, per evitare che il resto dell'immagine appaia
+                # come uno sfondo indistinto, perdendo il dettaglio necessario
+                # TODO: sostituire i parametri `AVISUMIN` e `AVISUMAX`, dipendenti dal software AvisFV
+                # con valori calcolati automaticamente o richiesti all'utente
+                if ('AVISUMIN' in hdr) and ('AVISUMAX' in hdr):
+                    image_data = np.clip(image_data, a_min=hdr['AVISUMIN'], a_max=hdr['AVISUMAX'])
                 # Crea un file temporaneo in formato PNG
                 temp_dir = tempfile.gettempdir()
                 temp_png_path = os.path.join(temp_dir, f"{path.stem}_converted.png")
