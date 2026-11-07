@@ -156,12 +156,15 @@ class ImageComparatorApp:
                     f"Le immagini avevano risoluzioni differenti.\n"
                     f"La seconda immagine è stata ridimensionata a priori a {pil_img1.size[0]}x{pil_img1.size[1]} pixel."
                 )
+
+            # conversione in ndarray e filtro gaussiano per ridurre il rumore
+            ksize = (7, 7)
+            sigma = 2
+            img1 = cv2.GaussianBlur(np.array(pil_img1), ksize, sigma)
+            img2 = cv2.GaussianBlur(np.array(pil_img2), ksize, sigma)
                 
             # 2. Esecuzione in base all'algoritmo selezionato
             if chosen_algorithm == "Structural Similarity (SSIM)":
-                # Usiamo direttamente le immagini PIL già ridimensionate e le convertiamo in array
-                img1 = np.array(pil_img1)
-                img2 = np.array(pil_img2)
 
                 # Calcola l'SSIM usando la funzione importata
                 ssim_map = ssim.ssim(img1, img2)
@@ -171,9 +174,6 @@ class ImageComparatorApp:
                 messagebox.showinfo("Risultato SSIM", f"Il punteggio SSIM medio è: {score:.4f}")
                 return
             elif chosen_algorithm == "Earth Mover's Distance (EMD)":
-    # Usiamo direttamente le immagini PIL già ridimensionate e le convertiamo in array
-                img1 = np.array(pil_img1)
-                img2 = np.array(pil_img2)
     
     # Calcola l'EMD usando la funzione importata
                 score = emd.calculate_emd(img1, img2)
@@ -182,9 +182,6 @@ class ImageComparatorApp:
                 messagebox.showinfo("Risultato EMD", f"Il punteggio EMD medio è: {score:.4f}")
                 return
             elif chosen_algorithm == "Mutual Information":
-             # Usiamo direttamente le immagini PIL già ridimensionate a monte
-                img1 = np.array(pil_img1)
-                img2 = np.array(pil_img2)
 
              # Calcola la Mutual Information
                 score = mutualinfo.calculate_mutual_information(img1, img2)
@@ -196,9 +193,7 @@ class ImageComparatorApp:
                 )
                 return
             elif chosen_algorithm == "Mix":
-                #coordinate polari
-                img1 = np.array(pil_img1)
-                img2 = np.array(pil_img2)
+
                 mix.mix(img1,img2)
                 
                 
