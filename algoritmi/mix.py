@@ -97,6 +97,8 @@ def mix(img1, img2):
         ax[1, 0].plot(polar_img1_flipped[model_radius // 2])
         ax[1, 1].plot(polar_img2_flipped[model_radius // 2])
         plt.show()
+                #TO DO:
                 #find traiettorie
+                #allinea al meglio due immagini
                 #correlazione
         return 
