@@ -10,7 +10,6 @@ def remove_high_contrast_noise(img, kernel_size=25,
     con soglie fisse prima di y_start e dopo y_end,
     e una transizione lineare nell'intervallo tra y_start e y_end.
     """
-   
     h, w = img.shape
     
     if y_end is None:

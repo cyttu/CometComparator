@@ -22,10 +22,10 @@ class ImageComparatorApp:
 
         # Lista di "n" algoritmi (puoi modificarla o aggiungerne quanti ne vuoi)
         self.algorithms_list = [
+            "Mix",
             "Structural Similarity (SSIM)",
             "Earth Mover's Distance (EMD)",
-            "Mutual Information",
-            "Mix"
+            "Mutual Information"
         ]
 
         # --- SEZIONE FILE 1 ---
